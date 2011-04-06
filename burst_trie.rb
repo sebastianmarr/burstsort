@@ -10,6 +10,10 @@ class BurstTrie
      @root.insert(string)
   end
   
+  def prefix(string)
+    return @root.prefix(string)
+  end
+  
   class Node
 
     def initialize(depth, pointer_hash, burst_limit)
@@ -32,15 +36,11 @@ class BurstTrie
         @pointers[character] = []
       end
       @pointers[character] << string
-      if !@pointers[character].length.nil? && @pointers[character].length > @burst_limit
+      if @pointers[character].respond_to?(:length) && @pointers[character].length > @burst_limit
         container = @pointers[character]
         @pointers[character] = Node.new(@depth + 1, @holy_pointers, @burst_limit)
         container.each { |string| @pointers[character].insert(string)}
       end
-    end
-    
-    def length
-      nil
     end
   end
 end
