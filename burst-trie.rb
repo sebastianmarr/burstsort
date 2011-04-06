@@ -1,6 +1,6 @@
 class BurstTrie
   
-  BURST_LIMIT = 8192
+  BURST_LIMIT = 100
   
   def initialize
     @root = Node.new(0)
@@ -30,26 +30,33 @@ class BurstTrie
         pointers[character] = Container.new
       end
       @pointers[character].insert(string)
+      if !@pointers[character].length.nil? && @pointers[character].length > BURST_LIMIT
+        container = @pointers[character]
+        @pointers[character] = Node.new(@depth + 1)
+        container.store.each { |string| @pointers[character].insert(string)}
+      end
+    end
+    
+    def length
+      nil
     end
     
   end
   
   class Container
     
-    def initialize(parent)
+    attr_reader :store
+  
+    def initialize
       @store = []
-      @parent = parent
     end
     
     def insert(string)
-      if @store.length == BURST_LIMIT
-               burst
-             end
       @store << string
     end
     
-    def burst
-      print "bursting now"
+    def length
+      @store.length
     end
   end
 end
