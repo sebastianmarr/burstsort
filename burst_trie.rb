@@ -19,42 +19,28 @@ class BurstTrie
       @burst_limit = burst_limit
     end
     
+    def <<(string)
+      insert(string)
+    end
+    
     def insert(string)
       character = string[@depth]
       if character.nil?
         character = ""
       end
       if @pointers[character].nil?
-        @pointers[character] = Container.new
+        @pointers[character] = []
       end
-      @pointers[character].insert(string)
+      @pointers[character] << string
       if !@pointers[character].length.nil? && @pointers[character].length > @burst_limit
         container = @pointers[character]
         @pointers[character] = Node.new(@depth + 1, @holy_pointers, @burst_limit)
-        container.store.each { |string| @pointers[character].insert(string)}
+        container.each { |string| @pointers[character].insert(string)}
       end
     end
     
     def length
       nil
-    end
-    
-  end
-  
-  class Container
-    
-    attr_reader :store
-  
-    def initialize
-      @store = []
-    end
-    
-    def insert(string)
-      @store << string
-    end
-    
-    def length
-      @store.length
     end
   end
 end
