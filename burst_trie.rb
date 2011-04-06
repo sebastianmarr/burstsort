@@ -1,10 +1,9 @@
 class BurstTrie
   
-  BURST_LIMIT = 100
-  
-  def initialize(alphabet)
+  def initialize(alphabet, burst_limit)
+    @burst_limit = burst_limit
     @init_pointers =  alphabet.inject({}) { |pointers, character| pointers[character] = nil; pointers}
-    @root = Node.new(0, @init_pointers)
+    @root = Node.new(0, @init_pointers, @burst_limit)
   end
   
   def insert(string)
@@ -13,10 +12,11 @@ class BurstTrie
   
   class Node
 
-    def initialize(depth, pointer_hash)
+    def initialize(depth, pointer_hash, burst_limit)
       @depth = depth
       @holy_pointers = pointer_hash
       @pointers = @holy_pointers.dup
+      @burst_limit = burst_limit
     end
     
     def insert(string)
@@ -28,9 +28,9 @@ class BurstTrie
         @pointers[character] = Container.new
       end
       @pointers[character].insert(string)
-      if !@pointers[character].length.nil? && @pointers[character].length > BURST_LIMIT
+      if !@pointers[character].length.nil? && @pointers[character].length > @burst_limit
         container = @pointers[character]
-        @pointers[character] = Node.new(@depth + 1, @holy_pointers)
+        @pointers[character] = Node.new(@depth + 1, @holy_pointers, @burst_limit)
         container.store.each { |string| @pointers[character].insert(string)}
       end
     end
