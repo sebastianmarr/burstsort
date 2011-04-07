@@ -39,7 +39,11 @@ class BurstTrie
       if @pointers[character].respond_to?(:length) && @pointers[character].length > @burst_limit
         container = @pointers[character]
         @pointers[character] = Node.new(@depth + 1, @holy_pointers, @burst_limit)
-        container.each { |string| @pointers[character].insert(string)}
+        begin
+          container.each { |string| @pointers[character].insert(string)}
+        rescue SystemStackError
+          raise ArgumentError, "Container size must be at least the count of the most duplicate string"
+        end
       end
     end
     
