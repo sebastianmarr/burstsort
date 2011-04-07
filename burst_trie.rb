@@ -10,8 +10,8 @@ class BurstTrie
      @root.insert(string)
   end
   
-  def prefix(string)
-    return @root.prefix(string)
+  def containers
+    return @root.containers_recursive
   end
   
   class Node
@@ -41,6 +41,18 @@ class BurstTrie
         @pointers[character] = Node.new(@depth + 1, @holy_pointers, @burst_limit)
         container.each { |string| @pointers[character].insert(string)}
       end
+    end
+    
+    def containers_recursive
+      containers = []
+      @pointers.each do |key, pointer|
+        if pointer.respond_to?(:containers_recursive) #trie node
+          containers.concat pointer.containers_recursive
+        elsif pointer.respond_to?(:include?) #container
+          containers << pointer
+        end
+      end
+      return containers
     end
   end
 end

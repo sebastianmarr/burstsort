@@ -1,7 +1,7 @@
 require "test/unit"
-require_relative "burst_trie"
+require_relative "burstsort"
 
-class BurstTrieTest < Test::Unit::TestCase
+class BurstsortTest < Test::Unit::TestCase
   
   def setup
     # collect an array of words from dictionary files
@@ -12,16 +12,11 @@ class BurstTrieTest < Test::Unit::TestCase
     @dictalphabet = (@dict.join.chars.to_a.uniq << "").sort
   end
   
-  def test_burst
-    t = BurstTrie.new(@hamletalphabet, 1000)
-    @hamlet.each { |w| t.insert(w) }
-    t.containers.each do |c|
-      assert(c.length <= 1000, "Container too big")
-    end
+  def test_sort_dict
+    assert_equal(@dict.sort, burstsort(@dict, @dictalphabet, 1000))
   end
-
-  def test_duplicates
-     t = BurstTrie.new(@hamletalphabet, 1)
-     assert_nothing_raised { 2.times { t.insert("foo") } }
+  
+  def test_sort_hamlet
+    assert_equal(@hamlet.sort, burstsort(@hamlet, @hamletalphabet, 1000))
   end
 end
