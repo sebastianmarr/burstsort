@@ -1,6 +1,6 @@
 require "test/unit"
 
-class BurstsortTest < Test::Unit::TestCase
+class BurstSortTest < Test::Unit::TestCase
   
   def setup
     # collect an array of words from dictionary files
@@ -12,10 +12,10 @@ class BurstsortTest < Test::Unit::TestCase
   end
   
   def test_sort_hamlet
-    assert_equal(@hamlet.sort, Burstsort::run(@hamlet, @hamlet_alphabet, 1000))
+    assert_equal(@hamlet.sort, BurstSort::run(@hamlet, @hamlet_alphabet, 1000))
   end
   
   def test_sort_words
-    assert_equal(@words.sort, Burstsort::run(@words, @words_alphabet, 8192))
+    assert_equal(@words.sort, BurstSort::run(@words, @words_alphabet, 8192))
   end
 end

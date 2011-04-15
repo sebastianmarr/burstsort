@@ -1,6 +1,6 @@
 require "burstsort/burst_trie"
 
-module Burstsort
+module BurstSort
   
   def self.run(strings, alphabet, burst_limit)
     t = BurstTrie.new(alphabet, burst_limit)

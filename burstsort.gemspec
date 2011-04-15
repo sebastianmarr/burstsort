@@ -4,7 +4,7 @@ require "burstsort/version"
 
 Gem::Specification.new do |s|
   s.name        = "burstsort"
-  s.version     = Burstsort::VERSION
+  s.version     = BurstSort::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Sebastian Marr"]
   s.email       = ["sbstnmrr@googlemail.com"]
