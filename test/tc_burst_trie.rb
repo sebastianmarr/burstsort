@@ -4,7 +4,7 @@ class BurstTrieTest < Test::Unit::TestCase
   
   def setup
     # collect an array of words from dictionary files
-    @hamlet = (File.new("hamletwords").readlines.inject([]) { |test, line| test << line.split; }).shuffle.flatten
+    @hamlet = (File.new("test/data/hamletwords").readlines.inject([]) { |test, line| test << line.split; }).shuffle.flatten
     # extract all uniqe characters from input words and create a sorted alphabet of them
     @hamletalphabet = (@hamlet.join.chars.to_a.uniq << "").sort
   end
