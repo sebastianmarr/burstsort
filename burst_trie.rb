@@ -1,9 +1,9 @@
 class BurstTrie
   
   def initialize(alphabet, burst_limit)
-    @burst_limit = burst_limit
-    @init_pointers =  alphabet.inject({}) { |pointers, character| pointers[character] = nil; pointers}
-    @root = Node.new(0, @init_pointers, @burst_limit)
+    $burst_limit = burst_limit
+    $init_pointers =  alphabet.inject({}) { |pointers, character| pointers[character] = nil; pointers}
+    @root = Node.new(0)
   end
   
   def insert(string)
@@ -16,11 +16,9 @@ class BurstTrie
   
   class Node
 
-    def initialize(depth, pointer_hash, burst_limit)
+    def initialize(depth)
       @depth = depth
-      @holy_pointers = pointer_hash
-      @pointers = @holy_pointers.dup
-      @burst_limit = burst_limit
+      @pointers = $init_pointers.dup
     end
     
     def <<(string)
@@ -36,9 +34,9 @@ class BurstTrie
         @pointers[character] = []
       end
       @pointers[character] << string
-      if @pointers[character].respond_to?(:length) && @pointers[character].length > @burst_limit
+      if @pointers[character].respond_to?(:length) && @pointers[character].length > $burst_limit
         container = @pointers[character]
-        @pointers[character] = Node.new(@depth + 1, @holy_pointers, @burst_limit)
+        @pointers[character] = Node.new(@depth + 1)
         begin
           container.each { |string| @pointers[character].insert(string)}
         rescue SystemStackError
