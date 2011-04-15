@@ -1,5 +1,4 @@
 require "test/unit"
-require_relative "burst_trie"
 
 class BurstTrieTest < Test::Unit::TestCase
   
