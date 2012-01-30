@@ -27,7 +27,7 @@ module BurstSort
      
       def insert(string)
         # find array index of character at depth of the string
-        index = string[@depth] == nil ? 0 : string[@depth].bytes.first
+        index = string[@depth] == nil ? 0 : string[@depth].ord
         
         # intitalize bucket if nil pointer at index
         if @pointers[index].nil?
