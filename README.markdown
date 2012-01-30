@@ -1,3 +1,6 @@
+Burstsort
+=========
+
 This is a Ruby implementation of the burst sort algorithm, which is suited exceptionally well for (very) big sets of strings. It uses the data structure of the burst trie, to store the strings in a cache-efficient and near-sorted manner.
 
 Caveats
