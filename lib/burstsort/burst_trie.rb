@@ -4,7 +4,7 @@ module BurstSort
   
     def initialize(alphabet, burst_limit)
       # find biggest char value in alphabet
-      $init_node = Array.new(alphabet.join.bytes.max)
+      $init_node = Array.new(alphabet.join.bytes.max + 1)
       $burst_limit = burst_limit
       @root = Node.new(0)
     end
