@@ -52,5 +52,17 @@ describe BurstSort do
         t.prefixes.should == ["bar", "baz", "bz", "f"]
       end
     end
+    
+    describe "node_count" do
+      
+      it "should return the number of nodes in the trie" do
+        t = BurstSort::BurstTrie.new(@hamletalphabet, 1)
+        t.insert "foo"
+        t.insert "bar"
+        t.insert "baz"
+        t.insert "bzz"
+        t.node_count.should == 3
+      end
+    end
   end
 end

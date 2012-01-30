@@ -25,6 +25,10 @@ module BurstSort
     def prefixes
       return @root.prefixes_recursive("")
     end
+    
+    def node_count
+      return @root.node_count_recursive
+    end
 
     class Node
 
@@ -93,6 +97,16 @@ module BurstSort
           end
         end
         return prefixes
+      end
+      
+      def node_count_recursive
+        count = 1
+        @pointers.each do |pointer|
+          if pointer.kind_of? Node
+            count = count + pointer.node_count_recursive
+          end
+        end
+        return count
       end
     end
   end
