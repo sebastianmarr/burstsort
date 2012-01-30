@@ -1,4 +1,4 @@
-require "burstsort"
+require_relative "../lib/burstsort/burst_trie"
 
 describe BurstSort do
   
