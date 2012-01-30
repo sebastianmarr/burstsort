@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.description = %q{Burst sort is an algorithm for sorting of large sets of strings.}
 
   s.rubyforge_project = "burstsort"
+  
+  s.add_development_dependency("rspec")
 
   s.files         = `hg manifest`.split("\n")
   s.test_files    = `hg locate --include test `.split("\n")
