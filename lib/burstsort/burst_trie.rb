@@ -27,7 +27,12 @@ module BurstSort
      
       def insert(string)
         # find array index of character at depth of the string
-        index = string[@depth] == nil ? 0 : string[@depth].ord
+        character = string[@depth]
+        if character.nil?
+          index = 0;
+        else
+          index = character.ord
+        end
         
         # intitalize bucket if nil pointer at index
         if @pointers[index].nil?
@@ -35,7 +40,7 @@ module BurstSort
         end
         
         # do different things depending on bucket or node
-        if @pointers[index].respond_to?(:length) # bucket
+        if @pointers[index].kind_of? Array # bucket
           @pointers[index] << string
           # bucket full => burst
           if @pointers[index].length > $burst_limit
@@ -58,9 +63,9 @@ module BurstSort
      def buckets_recursive 
        buckets = []
        @pointers.each do |pointer|
-         if pointer.respond_to?(:buckets_recursive)
+         if pointer.kind_of? Node
            buckets.concat pointer.buckets_recursive
-         elsif pointer.respond_to?(:include?)
+         elsif pointer.kind_of? Array
            buckets << pointer
          end
        end
