@@ -1,7 +1,7 @@
 module BurstSort
-  
+
   class BurstTrie  
-  
+
     def initialize(alphabet, burst_limit, &access_property)
       # find biggest char value in alphabet
       $init_node = Array.new(alphabet.join.bytes.max + 1)
@@ -13,24 +13,28 @@ module BurstSort
       end
       @root = Node.new(0, @accessor)
     end
-    
+
     def insert(string)
       @root.insert(string)
     end
-   
+
     def buckets
       return @root.buckets_recursive
     end
-   
+
+    def prefixes
+      return @root.prefixes_recursive("")
+    end
+
     class Node
-   
+
       def initialize(depth, access_property)
         @depth = depth
         @accessor = access_property
         # clean set of nil pointers
         @pointers = $init_node.dup
       end
-     
+
       def insert(string)
         # find array index of character at depth of the string
         character = (@accessor.call(string))[@depth]
@@ -39,12 +43,12 @@ module BurstSort
         else
           index = character.ord
         end
-        
+
         # intitalize bucket if nil pointer at index
         if @pointers[index].nil?
           @pointers[index] = Array.new()
         end
-        
+
         # do different things depending on bucket or node
         if @pointers[index].kind_of? Array # bucket
           @pointers[index] << string
@@ -64,19 +68,32 @@ module BurstSort
         else                                     # node
           @pointers[index].insert(string)
         end
-     end
-     
-     def buckets_recursive 
-       buckets = []
-       @pointers.each do |pointer|
-         if pointer.kind_of? Node
-           buckets.concat pointer.buckets_recursive
-         elsif pointer.kind_of? Array
-           buckets << pointer
-         end
-       end
-       return buckets
-     end
+      end
+
+      def buckets_recursive 
+        buckets = []
+        @pointers.each do |pointer|
+          if pointer.kind_of? Node
+            buckets.concat pointer.buckets_recursive
+          elsif pointer.kind_of? Array
+            buckets << pointer
+          end
+        end
+        return buckets
+      end
+
+      def prefixes_recursive(prefix_until_here)
+        prefixes = []
+        @pointers.each_index do |index|
+          next_prefix = String.new(prefix_until_here) << index        
+          if @pointers[index].kind_of? Node
+            prefixes.concat @pointers[index].prefixes_recursive(next_prefix)
+          elsif @pointers[index].kind_of? Array
+            prefixes << next_prefix
+          end
+        end
+        return prefixes
+      end
     end
   end
 end

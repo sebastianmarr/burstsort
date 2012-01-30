@@ -40,5 +40,17 @@ describe BurstSort do
         trie_elements.should  == @hamlet_hash.length
       end
     end
+    
+    describe "prefixes" do
+      
+      it "should return all prefixes" do
+        t = BurstSort::BurstTrie.new(@hamletalphabet, 1)
+        t.insert "foo"
+        t.insert "bar"
+        t.insert "baz"
+        t.insert "bzz"
+        t.prefixes.should == ["bar", "baz", "bz", "f"]
+      end
+    end
   end
 end
