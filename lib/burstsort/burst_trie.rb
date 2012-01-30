@@ -3,8 +3,9 @@ module BurstSort
   class BurstTrie  
   
     def initialize(alphabet, burst_limit)
+      # find biggest char value in alphabet
+      $init_node = Array.new(alphabet.join.bytes.max)
       $burst_limit = burst_limit
-      $init_pointers =  alphabet.inject({}) { |pointers, character| pointers[character] = nil; pointers}
       @root = Node.new(0)
     end
     
@@ -12,54 +13,59 @@ module BurstSort
       @root.insert(string)
     end
    
-    def containers
-      return @root.containers_recursive
+    def buckets
+      return @root.buckets_recursive
     end
    
     class Node
    
       def initialize(depth)
         @depth = depth
-        @pointers = $init_pointers.dup
-      end
-     
-      def <<(string)
-        insert(string)
+        # clean set of nil pointers
+        @pointers = $init_node.dup
       end
      
       def insert(string)
-        character = string[@depth]
-        if character.nil?
-          character = ""
+        # find array index of character at depth of the string
+        index = string[@depth] == nil ? 0 : string[@depth].bytes.first
+        
+        # intitalize bucket if nil pointer at index
+        if @pointers[index].nil?
+          @pointers[index] = Array.new()
         end
-        if @pointers[character].nil?
-          @pointers[character] = []
-        end
-        @pointers[character] << string
-        if @pointers[character].respond_to?(:length) && @pointers[character].length > $burst_limit
-          container = @pointers[character]
-          @pointers[character] = Node.new(@depth + 1)
-          begin
-            container.each { |string| @pointers[character].insert(string)}
-          rescue SystemStackError
-            raise ArgumentError, "Container size must be at least the count of the most duplicate string"
+        
+        # do different things depending on bucket or node
+        if @pointers[index].respond_to?(:length) # bucket
+          @pointers[index] << string
+          # bucket full => burst
+          if @pointers[index].length > $burst_limit
+            # cache old (full) bucket
+            old_bucket = @pointers[index]
+            # initalize new node at pointer destination
+            @pointers[index] = Node.new(@depth + 1)
+            # insert old bucket onto new node
+            begin
+              old_bucket.each { |s| @pointers[index].insert(s) }
+            rescue SystemStackError
+              raise ArgumentError, "Container size must be at least the count of the most duplicate string"
+            end
           end
+        else                                     # node
+          @pointers[index].insert(string)
         end
-       
      end
      
-     def containers_recursive 
-       containers = []
-       @pointers.each do |key, pointer|
-         if pointer.respond_to?(:containers_recursive) #trie node
-           containers.concat pointer.containers_recursive
-         elsif pointer.respond_to?(:include?) #container
-           containers << pointer
+     def buckets_recursive 
+       buckets = []
+       @pointers.each do |pointer|
+         if pointer.respond_to?(:buckets_recursive)
+           buckets.concat pointer.buckets_recursive
+         elsif pointer.respond_to?(:include?)
+           buckets << pointer
          end
        end
-       return containers
+       return buckets
      end
-     
     end
   end
 end

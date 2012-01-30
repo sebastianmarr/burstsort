@@ -8,7 +8,7 @@ module BurstSort
       t.insert(s)
     end
     sorted = []
-    t.containers.each do |c|
+    t.buckets.each do |c|
       sorted.concat c.sort
     end
     return sorted

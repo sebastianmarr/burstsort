@@ -14,7 +14,7 @@ describe BurstSort do
     it "should burst on the given limit" do
       t = BurstSort::BurstTrie.new(@hamletalphabet, 1000)
       @hamlet.each { |w| t.insert(w) }
-      t.containers.each do |c|
+      t.buckets.each do |c|
         c.length.should be <= 1000
       end
     end
