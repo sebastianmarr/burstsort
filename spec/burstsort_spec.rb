@@ -19,4 +19,33 @@ describe "algorithm" do
     BurstSort::run(@words, @words_alphabet, 1000).should == @words.sort
   end
   
+  describe "with a block for specifying key accessor" do
+    
+    before(:all) do
+      @hamlet_hashes = @hamlet.inject([]) do |memo, current|
+        memo << { :suffix => current, :position => rand }
+      end
+      @words_hashes = @words.inject([]) do |memo, current|
+        memo << { :suffix => current, :position => rand }
+      end
+    end
+    
+    it "should sort hashes with hamlet words using the specified key" do
+      sorted = BurstSort::run(@hamlet_hashes, @hamlet_alphabet, 1000) do |x| 
+        x[:suffix]
+      end
+      bef = ""
+      sorted.each do |element|
+        element[:suffix].should >= bef
+        bef = element[:suffix]
+      end
+    end
+    
+    it "should sort hashes with dictionary words using the specified key" do
+      sorted = BurstSort::run(@words_hashes, @words_alphabet, 1000) do |x| 
+        x[:suffix]
+      end
+      sorted.should == @words_hashes.sort { |a,b| a[:suffix] <=> b[:suffix] }
+    end
+  end
 end
