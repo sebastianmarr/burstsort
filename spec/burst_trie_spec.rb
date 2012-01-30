@@ -24,5 +24,21 @@ describe BurstSort do
       lambda { 2.times {t.insert "foo" } }.should raise_exception(ArgumentError)
     end
     
+    describe "with a block" do
+      
+      before(:each) do
+        @hamlet_hash = Array.new
+        @hamlet.each { |word| @hamlet_hash << { :suffix => word, :position => rand } }
+      end
+      
+      it "should work with complex array object and a block" do
+        t = BurstSort::BurstTrie.new(@hamletalphabet, 1000) { |x| x[:suffix] }
+        @hamlet_hash.each { |h| t.insert(h) }
+        trie_elements = t.buckets.inject(0) do |memo, current|
+          memo + current.length
+        end
+        trie_elements.should  == @hamlet_hash.length
+      end
+    end
   end
 end

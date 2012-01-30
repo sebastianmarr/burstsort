@@ -2,11 +2,16 @@ module BurstSort
   
   class BurstTrie  
   
-    def initialize(alphabet, burst_limit)
+    def initialize(alphabet, burst_limit, &access_property)
       # find biggest char value in alphabet
       $init_node = Array.new(alphabet.join.bytes.max + 1)
       $burst_limit = burst_limit
-      @root = Node.new(0)
+      if block_given?
+        @accessor = access_property
+      else
+        @accessor = Proc.new { |x| x }
+      end
+      @root = Node.new(0, @accessor)
     end
     
     def insert(string)
@@ -19,15 +24,16 @@ module BurstSort
    
     class Node
    
-      def initialize(depth)
+      def initialize(depth, access_property)
         @depth = depth
+        @accessor = access_property
         # clean set of nil pointers
         @pointers = $init_node.dup
       end
      
       def insert(string)
         # find array index of character at depth of the string
-        character = string[@depth]
+        character = (@accessor.call(string))[@depth]
         if character.nil?
           index = 0;
         else
@@ -47,7 +53,7 @@ module BurstSort
             # cache old (full) bucket
             old_bucket = @pointers[index]
             # initalize new node at pointer destination
-            @pointers[index] = Node.new(@depth + 1)
+            @pointers[index] = Node.new(@depth + 1, @accessor)
             # insert old bucket onto new node
             begin
               old_bucket.each { |s| @pointers[index].insert(s) }
