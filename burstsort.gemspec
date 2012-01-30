@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency("rspec")
 
-  s.files         = `hg manifest`.split("\n")
-  s.test_files    = `hg locate --include test `.split("\n")
-  s.executables   = `hg locate --include bin/`.split("\n").map{ |f| File.basename(f) }
+  s.files         = Dir.glob("lib/**/*.rb")
+  s.test_files    = Dir.glob("spec/**")
   s.require_paths = ["lib"]
 end
