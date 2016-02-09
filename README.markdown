@@ -12,3 +12,6 @@ Acknowledgements
 ----------------
 
 This is implementation of the burst sort algorithm is based on the original paper by Ranjan Sinha and Justin Zobel, which can be found here: [http://goanna.cs.rmit.edu.au/~jz/fulltext/alenex03.pdf](http://goanna.cs.rmit.edu.au/~jz/fulltext/alenex03.pdf)
+
+
+License: MIT
